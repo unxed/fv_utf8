@@ -2725,10 +2725,16 @@ const
   InitFrame: array[0..17] of Byte =
     ($06, $0A, $0C, $05, $00, $05, $03, $0A, $09,
      $16, $1A, $1C, $15, $00, $15, $13, $1A, $19);
-  FrameChars_437: array[0..75] of Char =
-    '   └ │┌├ ┘─┴┐┤┬┼   ╚ ║╔╟ ╝═╧╗╢╤╬';
-  FrameChars_850: array[0..75] of Char =
-    '   └ │┌├ ┘─┴┐┤┬┼   ╚ ║╔║ ╝══╗║═╬';
+  FrameChars_437: array[0..31] of String =
+    (' ', ' ', ' ', '└', ' ',
+     '│', '┌', '├', ' ', '┘',
+     '─', '┴', '┐', '┤', '┬',
+     '┼', ' ', ' ', ' ', '╚',
+     ' ', '║', '╔', '╟', ' ',
+     '╝', '═', '╧', '╗', '╢',
+     '╤', '╬');
+//  FrameChars_850: array[0..75] of Char =
+//    '   └ │┌├ ┘─┴┐┤┬┼   ╚ ║╔║ ╝══╗║═╬';
 var
   FrameMask : array[0..MaxViewWidth-1] of Byte;
   ColorMask : word;
@@ -2792,14 +2798,18 @@ begin
      CurrView:=CurrView^.Next;
    end;
   ColorMask:=Color shl 32; // 8->32 by unxed
-  p:=framechars_437;
+// by unxed
+//  p:=framechars_437;
   {$ifdef unix}
   {Codepage variables are currently Unix only.}
-  if internal_codepage<>cp437 then
-    p:=framechars_850;
+//  if internal_codepage<>cp437 then
+//    p:=framechars_850;
   {$endif}
-  for i:=0 to Size.X-1 do
-    TVideoBuf(FrameBuf)[i]:=ord(p[FrameMask[i]]) or ColorMask;
+  for i:=0 to Size.X-1 do Begin
+    Int64Rec(TVideoBuf(FrameBuf)[i]).Hi := ColorMask;
+    Int64Rec(TVideoBuf(FrameBuf)[i]).Lo := LongIntFromStr(framechars_437[FrameMask[i]]);
+    //ord(p[FrameMask[i]]) or 
+  End;
 end;
 
 

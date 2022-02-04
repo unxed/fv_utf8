@@ -1012,16 +1012,16 @@ VAR CNormal, CSelect, CSelectDisabled, CDisabled, Color: Word; Index, Y: Integer
     S: String; P: PMenuItem; B: TDrawBuffer;
 Type
    FrameLineType = (UpperLine,NormalLine,SeparationLine,LowerLine);
-   FrameLineChars = Array[0..8] of char;
+   FrameLineChars = Array[0..2] of String;
 Const
    FrameLines : Array[FrameLineType] of FrameLineChars =
-     ('┌─┐','│ │','├─┤','└─┘');
+     (('┌','─','┐'),('│',' ','│'),('├','─','┤'),('└','─','┘'));
   Procedure CreateBorder(LineType : FrameLineType);
   Begin
     MoveChar(B, ' ', CNormal, 1);
-    MoveChar(B[1], FrameLines[LineType][0], CNormal, 1);
-    MoveChar(B[2], FrameLines[LineType][1], Color, Size.X-4);
-    MoveChar(B[Size.X-2], FrameLines[LineType][2], CNormal, 1);
+    FillStr(B[1], FrameLines[LineType][0], CNormal, 1);
+    FillStr(B[2], FrameLines[LineType][1], Color, Size.X-4);
+    FillStr(B[Size.X-2], FrameLines[LineType][2], CNormal, 1);
     MoveChar(B[Size.X-1], ' ', CNormal, 1);
   End;
 
