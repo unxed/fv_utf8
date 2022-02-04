@@ -982,13 +982,21 @@ END;
 {---------------------------------------------------------------------------}
 
 PROCEDURE MoveChar (Var Dest; C: Char; Attr: Byte; Count: Sw_Word);
-VAR I: Word; P: ^Int64;
+VAR I: Word; P: ^Int64; S: String;
 BEGIN
+
+   S[1] := C;
+   S[0] := Chr(0);
+
+   FillStr(Dest, S, Attr, Count);
+
+(*
    For I := 1 To Count Do Begin
      P := @TInt64Array(Dest)[I-1];                     { Pointer to Sw_Word }
      If (Attr <> 0) Then Int64Rec(P^).Hi := Attr;      { Copy attribute }
      If (Ord(C) <> 0) Then Int64Rec(P^).Lo := Byte(C); { Copy character }
    End;
+*)
 END;
 
 {+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++}

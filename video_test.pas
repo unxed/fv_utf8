@@ -34,7 +34,9 @@ begin
 	Int64Rec(c).Bytes[0] := 209; // d1
 	Int64Rec(c).Bytes[1] := 128; // 80
 
-	VideoBuf^[1] := c;
+	VideoBuf^[98] := c;
+
+	VideoBuf^[99] := c;
 
 	UpdateScreen(true);
     readln();
