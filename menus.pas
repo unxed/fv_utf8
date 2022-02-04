@@ -934,9 +934,8 @@ BEGIN
          J := CStrLen(P^.Name^);                      { Length of string }
          MoveChar(B[I], ' ', Byte(Color), 1);
          MoveCStr(B[I+1], P^.Name^, Color);           { Name to buffer }
-         MoveChar(B[I+1+J], ' ', Byte(Color), 1); // FIXME positioned wrongly
+         MoveChar(B[I+1+J], ' ', Byte(Color), 1);
          Inc(I, J+2);                                 { Advance position }
-         Inc(I, 4); // FIXME DEBUG                                 { Advance position }
        End;
        P := P^.Next;                                  { Next item }
      End;

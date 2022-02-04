@@ -916,17 +916,21 @@ BEGIN
    skip := false;
    For I := 1 To Length(S) Do Begin
 
-   // UTF-8 "processing"
-   // FIXME: this is kind of "emulating" UTF-8 processing,
-   // not real processing itself
+     // UTF-8 "processing"
+     // FIXME: this is kind of "emulating" UTF-8 processing,
+     // not real processing itself
+
      If (not skip and (Ord(S[I]) > 127)) Then Begin
         skip := true;
+        Inc(J);
+        continue;
      End;
 
      If (skip) Then
         skip := false
      Else
          If (S[I] <> '~') Then Inc(J);                    { Inc count if not ~ }
+   
    End;
    CStrLen := J;                                      { Return length }
 END;
