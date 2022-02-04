@@ -62,6 +62,7 @@ UNIT Drivers;
 {$endif}
 
 USES
+   sysutils,
    {$IFDEF OS_WINDOWS}                                { WIN/NT CODE }
          Windows,                                     { Standard unit }
    {$ENDIF}
@@ -100,6 +101,8 @@ USES
    video,
    SysMsg,
    FVCommon, Objects;                                 { GFV standard units }
+
+TYPE TInt64Array = array [0..4096] of Int64;
 
 {***************************************************************************}
 {                              PUBLIC CONSTANTS                             }
@@ -331,6 +334,8 @@ unchanged if Attr is zero.
 25May96 LdB
 ---------------------------------------------------------------------}
 PROCEDURE MoveStr (Var Dest; Const Str: String; Attr: Byte);
+
+PROCEDURE FillStr (Var Dest; Const Str: String; Attr: Byte; Count: Sw_Word);
 
 {-MoveCStr-----------------------------------------------------------
 The characters in Str are moved into the low bytes of corresponding
@@ -913,12 +918,27 @@ END;
 {  MoveStr -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 10Jul99 LdB           }
 {---------------------------------------------------------------------------}
 PROCEDURE MoveStr (Var Dest; Const Str: String; Attr: Byte);
-VAR I: Word; P: PWord;
+VAR I: Word; P: ^Int64;
 BEGIN
    For I := 1 To Length(Str) Do Begin                 { For each character }
-     P := @TWordArray(Dest)[I-1];                     { Pointer to Sw_Word }
-     If (Attr <> 0) Then WordRec(P^).Hi := Attr;      { Copy attribute }
-     WordRec(P^).Lo := Byte(Str[I]);                  { Copy string char }
+     P := @TInt64Array(Dest)[I-1];                     { Pointer to Sw_Word }
+     If (Attr <> 0) Then Int64Rec(P^).Hi := Attr;      { Copy attribute }
+     Int64Rec(P^).Lo := Byte(Str[I]);                  { Copy string char }
+   End;
+END;
+
+// by unxed
+// Вместо MoveChar, для символа UTF-8 в виде строки
+PROCEDURE FillStr (Var Dest; Const Str: String; Attr: Byte; Count: Sw_Word);
+VAR I,J: Word; P: ^Int64;
+BEGIN
+   For I := 1 To Count Do Begin
+     P := @TInt64Array(Dest)[I-1];
+     For J := 1 To 4 Do Begin
+       if (Ord(Str[0]) >= J) then Int64Rec(P^).Bytes[J-1] := Byte(Str[J])
+       else Int64Rec(P^).Bytes[J-1] := 0;
+     End;
+     Int64Rec(P^).Hi := Attr;
    End;
 END;
 
@@ -926,15 +946,15 @@ END;
 {  MoveCStr -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 10Jul99 LdB          }
 {---------------------------------------------------------------------------}
 PROCEDURE MoveCStr (Var Dest; Const Str: String; Attrs: Word);
-VAR B: Byte; I, J: Sw_Word; P: PWord;
+VAR B: Byte; I, J: Sw_Word; P: ^Int64;
 BEGIN
    J := 0;                                            { Start position }
    For I := 1 To Length(Str) Do Begin                 { For each character }
      If (Str[I] <> '~') Then Begin                    { Not tilde character }
-       P := @TWordArray(Dest)[J];                     { Pointer to Sw_Word }
+       P := @TInt64Array(Dest)[J];                     { Pointer to Sw_Word }
        If (Lo(Attrs) <> 0) Then
-         WordRec(P^).Hi := Lo(Attrs);                 { Copy attribute }
-       WordRec(P^).Lo := Byte(Str[I]);                { Copy string char }
+         Int64Rec(P^).Hi := Lo(Attrs);                 { Copy attribute }
+       Int64Rec(P^).Lo := Byte(Str[I]);                { Copy string char }
        Inc(J);                                        { Next position }
      End Else Begin
        B := Hi(Attrs);                                { Hold attribute }
@@ -948,25 +968,26 @@ END;
 {  MoveBuf -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 10Jul99 LdB           }
 {---------------------------------------------------------------------------}
 PROCEDURE MoveBuf (Var Dest, Source; Attr: Byte; Count: Sw_Word);
-VAR I: Word; P: PWord;
+VAR I: Word; P: ^Int64;
 BEGIN
    For I := 1 To Count Do Begin
-     P := @TWordArray(Dest)[I-1];                     { Pointer to Sw_Word }
-     If (Attr <> 0) Then WordRec(P^).Hi := Attr;      { Copy attribute }
-     WordRec(P^).Lo := TByteArray(Source)[I-1];       { Copy source data }
+     P := @TInt64Array(Dest)[I-1];                     { Pointer to Sw_Word }
+     If (Attr <> 0) Then Int64Rec(P^).Hi := Attr;      { Copy attribute }
+     Int64Rec(P^).Lo := TByteArray(Source)[I-1];       { Copy source data }
    End;
 END;
 
 {---------------------------------------------------------------------------}
 {  MoveChar -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 10Jul99 LdB          }
 {---------------------------------------------------------------------------}
+
 PROCEDURE MoveChar (Var Dest; C: Char; Attr: Byte; Count: Sw_Word);
-VAR I: Word; P: PWord;
+VAR I: Word; P: ^Int64;
 BEGIN
    For I := 1 To Count Do Begin
-     P := @TWordArray(Dest)[I-1];                     { Pointer to Sw_Word }
-     If (Attr <> 0) Then WordRec(P^).Hi := Attr;      { Copy attribute }
-     If (Ord(C) <> 0) Then WordRec(P^).Lo := Byte(C); { Copy character }
+     P := @TInt64Array(Dest)[I-1];                     { Pointer to Sw_Word }
+     If (Attr <> 0) Then Int64Rec(P^).Hi := Attr;      { Copy attribute }
+     If (Ord(C) <> 0) Then Int64Rec(P^).Lo := Byte(C); { Copy character }
    End;
 END;
 

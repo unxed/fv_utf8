@@ -378,7 +378,7 @@ function Toutlineviewer.getgraph(level:integer;lines:longint;
                                  flags:word):string;
 
 begin
-  getgraph:=creategraph(level,lines,flags,3,3,' ³ÃÀÄÄ+Ä');
+  getgraph:=creategraph(level,lines,flags,3,3,' â”‚â”œâ””â”€â”€+â”€');
 end;
 
 function Toutlineviewer.getnode(i:sw_integer):pointer;

@@ -48,6 +48,7 @@ UNIT Views;
 {====================================================================}
 
 USES
+   sysutils,
    {$IFDEF OS_WINDOWS}                                { WIN/NT CODE }
          Windows,                                     { Standard unit }
    {$ENDIF}
@@ -281,14 +282,14 @@ TYPE
 {                            TDrawBuffer RECORD                             }
 {---------------------------------------------------------------------------}
 TYPE
-   TDrawBuffer = Array [0..MaxViewWidth - 1] Of Word; { Draw buffer record }
-   PDrawBuffer = ^TDrawBuffer;                        { Ptr to draw buffer }
+   TDrawBuffer = Array [0..MaxViewWidth - 1] Of Int64; { Draw buffer record } // by unxed
+   PDrawBuffer = ^TDrawBuffer;                         { Ptr to draw buffer }
 
 {---------------------------------------------------------------------------}
 {                           TVideoBuffer RECORD                             }
 {---------------------------------------------------------------------------}
 TYPE
-   TVideoBuf = ARRAY [0..3999] of Word;               { Video buffer }
+   TVideoBuf = ARRAY [0..3999] of Int64;              { Video buffer } // by unxed
    PVideoBuf = ^TVideoBuf;                            { Pointer to buffer }
 
 {---------------------------------------------------------------------------}
@@ -2724,10 +2725,10 @@ const
   InitFrame: array[0..17] of Byte =
     ($06, $0A, $0C, $05, $00, $05, $03, $0A, $09,
      $16, $1A, $1C, $15, $00, $15, $13, $1A, $19);
-  FrameChars_437: array[0..31] of Char =
-    '   À ³ÚÃ ÙÄÁ¿´ÂÅ   È ºÉÇ ¼ÍÏ»¶ÑÎ';
-  FrameChars_850: array[0..31] of Char =
-    '   À ³ÚÃ ÙÄÁ¿´ÂÅ   È ºÉº ¼ÍÍ»ºÍÎ';
+  FrameChars_437: array[0..75] of Char =
+    '   â”” â”‚â”Œâ”œ â”˜â”€â”´â”â”¤â”¬â”¼   â•š â•‘â•”â•Ÿ â•â•â•§â•—â•¢â•¤â•¬';
+  FrameChars_850: array[0..75] of Char =
+    '   â”” â”‚â”Œâ”œ â”˜â”€â”´â”â”¤â”¬â”¼   â•š â•‘â•”â•‘ â•â•â•â•—â•‘â•â•¬';
 var
   FrameMask : array[0..MaxViewWidth-1] of Byte;
   ColorMask : word;
@@ -2790,7 +2791,7 @@ begin
       end;
      CurrView:=CurrView^.Next;
    end;
-  ColorMask:=Color shl 8;
+  ColorMask:=Color shl 32; // 8->32 by unxed
   p:=framechars_437;
   {$ifdef unix}
   {Codepage variables are currently Unix only.}
@@ -2847,7 +2848,7 @@ begin
       I := 7
      else
       I := 3;
-     WordRec(B[Width - I]).Lo := PWindow(Owner)^.Number + $30;
+     Int64Rec(B[Width - I]).Lo := PWindow(Owner)^.Number + $30;
    end;
   if Owner <> nil then
    Title := PWindow(Owner)^.GetTitle(L)
@@ -2869,7 +2870,7 @@ begin
   begin
     if PWindow(Owner)^.Flags and wfClose <> 0 then
       if FrameMode and fmCloseClicked = 0 then
-        MoveCStr(B[2], '[~þ~]', CFrame)
+        MoveCStr(B[2], '[~â– ~]', CFrame)
       else
         MoveCStr(B[2], '[~'+ClickC[LowAscii]+'~]', CFrame);
     if PWindow(Owner)^.Flags and wfZoom <> 0 then
@@ -2877,10 +2878,10 @@ begin
       MoveCStr(B[Width - 5], '[~'+LargeC[LowAscii]+'~]', CFrame);
       Owner^.SizeLimits(Min, Max);
       if FrameMode and fmZoomClicked <> 0 then
-        WordRec(B[Width - 4]).Lo := ord(ClickC[LowAscii])
+        Int64Rec(B[Width - 4]).Lo := ord(ClickC[LowAscii])
       else
         if (Owner^.Size.X=Max.X) and (Owner^.Size.Y=Max.Y) then
-          WordRec(B[Width - 4]).Lo := ord(RestoreC[LowAscii]);
+          Int64Rec(B[Width - 4]).Lo := ord(RestoreC[LowAscii]);
     end;
   end;
   WriteLine(0, 0, Size.X, 1, B);
@@ -2892,7 +2893,7 @@ begin
   FrameLine(B, Size.Y - 1, F + 6, Byte(CFrame));
   if State and sfActive <> 0 then
     if PWindow(Owner)^.Flags and wfGrow <> 0 then
-      MoveCStr(B[Width - 2], '~ÄÙ~', CFrame);
+      MoveCStr(B[Width - 2], '~â”€â”˜~', CFrame);
   WriteLine(0, Size.Y - 1, Size.X, 1, B);
 end;
 
@@ -3551,9 +3552,9 @@ BEGIN
          Text := Copy(Text, Indent, ColWidth);        { Select right bit }
          MoveStr(B[CurCol+1], Text, Color);           { Transfer to buffer }
          If ShowMarkers Then Begin
-           WordRec(B[CurCol]).Lo := Byte(
+           Int64Rec(B[CurCol]).Lo := Byte(
              SpecialChars[SCOff]);                        { Set marker character }
-           WordRec(B[CurCol+ColWidth-2]).Lo := Byte(
+           Int64Rec(B[CurCol+ColWidth-2]).Lo := Byte(
              SpecialChars[SCOff+1]);                        { Set marker character }
          End;
        End;
@@ -4361,7 +4362,7 @@ var
   i : Sw_integer;
 begin
   myChar:=MapColor(Color);
-  myChar:=(myChar shl 8) + ord(C);
+  myChar:=(myChar shl 32) + ord(C); // 8->32 by unxed
   if Count>0 then
    begin
      if Count>maxViewWidth then
@@ -4397,7 +4398,7 @@ begin
      if l>maxViewWidth then
       l:=maxViewWidth;
      MyColor:=MapColor(Color);
-     MyColor:=MyColor shl 8;
+     MyColor:=MyColor shl 32; // 8->32 by unxed
      for i:=0 to l-1 do
        B[i]:=MyColor+ord(Str[i+1]);
      do_writeView(x,x+l,y,b);

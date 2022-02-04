@@ -1833,10 +1833,10 @@ end;
 
 procedure TDirListBox.NewDirectory(var ADir: DirStr);
 const
-  PathDir       = 'ÀÄÂ';
-  FirstDir     =   'ÀÂÄ';
-  MiddleDir   =   ' ÃÄ';
-  LastDir       =   ' ÀÄ';
+  PathDir       = 'â””â”€â”¬';
+  FirstDir     =   'â””â”¬â”€';
+  MiddleDir   =   ' â”œâ”€';
+  LastDir       =   ' â””â”€';
   IndentSize    = '  ';
 var
   AList: PCollection;
@@ -1943,15 +1943,15 @@ begin
     end;
   FindClose(SR);
     P := PDirEntry(AList^.At(AList^.Count-1))^.DisplayText;
-    I := Pos('À',P^);
+    I := Pos('â””',P^);
     if I = 0 then
     begin
-      I := Pos('Ã',P^);
-      if I <> 0 then P^[I] := 'À';
+      I := Pos('â”œ',P^);
+      if I <> 0 then P^[I] := '+'; // 'â””'; // FIXME
     end else
     begin
-      P^[I+1] := 'Ä';
-      P^[I+2] := 'Ä';
+      P^[I+1] := '-'; // 'â”€'; FIXME
+      P^[I+2] := '-'; // 'â”€'; FIXME
     end;
   end;
   NewList(AList);

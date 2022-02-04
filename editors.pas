@@ -24,6 +24,7 @@ unit Editors;
 interface
 
 uses
+  sysutils,
   Objects, Drivers,Views,Dialogs,FVCommon,FVConsts;
 
 const
@@ -1197,17 +1198,17 @@ begin
   MoveChar (B, Frame, Color, Size.X);
   { If the text has been modified, put an 'M' in the TIndicator display. }
   if Modified then
-    WordRec (B[1]).Lo := 77;
+    Int64Rec(B[1]).Lo := 77;
   { If WordWrap is active put a 'W' in the TIndicator display. }
   if WordWrap then
-    WordRec (B[2]).Lo := 87
+    Int64Rec(B[2]).Lo := 87
   else
-    WordRec (B[2]).Lo := Byte (Frame);
+    Int64Rec(B[2]).Lo := Byte (Frame);
   { If AutoIndent is active put an 'I' in TIndicator display. }
   if AutoIndent then
-    WordRec (B[0]).Lo := 73
+    Int64Rec(B[0]).Lo := 73
   else
-    WordRec (B[0]).Lo := Byte (Frame);
+    Int64Rec(B[0]).Lo := Byte (Frame);
   L[0] := Location.Y + 1;
   L[1] := Location.X + 1;
   FormatStr (S, ' %d:%d ', L);

@@ -52,6 +52,7 @@ UNIT App;
 {====================================================================}
 
 USES
+   sysutils,
    {$IFDEF OS_WINDOWS}                                { WIN/NT CODE }
        Windows,                                       { Standard units }
    {$ENDIF}
@@ -194,8 +195,8 @@ CONST
 {---------------------------------------------------------------------------}
 TYPE
    TBackGround = OBJECT (TView)
-         Pattern: Char;                               { Background pattern }
-      CONSTRUCTOR Init (Var Bounds: TRect; APattern: Char);
+         Pattern: String;                               { Background pattern }
+      CONSTRUCTOR Init (Var Bounds: TRect; APattern: String);
       CONSTRUCTOR Load (Var S: TStream);
       FUNCTION GetPalette: PPalette; Virtual;
       PROCEDURE Draw; Virtual;
@@ -424,7 +425,7 @@ END;
 {--TBackGround--------------------------------------------------------------}
 {  Init -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 12Sep97 LdB              }
 {---------------------------------------------------------------------------}
-CONSTRUCTOR TBackGround.Init (Var Bounds: TRect; APattern: Char);
+CONSTRUCTOR TBackGround.Init (Var Bounds: TRect; APattern: String);
 BEGIN
    Inherited Init(Bounds);                            { Call ancestor }
    GrowMode := gfGrowHiX + gfGrowHiY;                 { Set grow modes }
@@ -455,7 +456,7 @@ END;
 PROCEDURE TBackground.Draw;
 VAR B: TDrawBuffer;
 BEGIN
-   MoveChar(B, Pattern, GetColor($01), Size.X);       { Fill draw buffer }
+   FillStr(B, Pattern, GetColor($01), Size.X);       { Fill draw buffer }
    WriteLine(0, 0, Size.X, Size.Y, B);                { Draw to area }
 END;
 
@@ -504,7 +505,7 @@ END;
 {  InitBackGround -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 12Sep97 LdB    }
 {---------------------------------------------------------------------------}
 PROCEDURE TDesktop.InitBackground;
-CONST Ch: Char = #176;
+CONST Ch: String = '░'; // #176; by unxed
 VAR R: TRect;
 BEGIN
    GetExtent(R);                                      { Get desktop extents }

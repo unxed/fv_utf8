@@ -22,6 +22,8 @@ unit video;
                                    interface
 {*****************************************************************************}
 
+function UTF8Enabled: Boolean;
+
 {$i videoh.inc}
 
 type  Tencoding=(cp437,         {Codepage 437}
@@ -270,35 +272,35 @@ begin
       convert_vga_to_acs:=word('>');
     {#27,} #17: {}
       convert_vga_to_acs:=word('<');
-    #176, #177, #178: {°±²}
+    #176, #177, #178: {â–‘â–’â–“}
       convert_vga_to_acs:=$f800+word('a');
-    #180, #181, #182, #185: {´µ¶¹}
+    #180, #181, #182, #185: {â”¤â•¡â•¢â•£}
       convert_vga_to_acs:=$f800+word('u');
-    #183, #184, #187, #191: {·¸»¿}
+    #183, #184, #187, #191: {â•–â••â•—â”}
       convert_vga_to_acs:=$f800+word('k');
-    #188, #189, #190, #217: {¼½¾Ù}
+    #188, #189, #190, #217: {â•â•œâ•›â”˜}
       convert_vga_to_acs:=$f800+word('j');
-    #192, #200, #211, #212: {ÀÈÓÔ}
+    #192, #200, #211, #212: {â””â•šâ•™â•˜}
       convert_vga_to_acs:=$f800+word('m');
-    #193, #202, #207, #208: {ÁÊÏÐ}
+    #193, #202, #207, #208: {â”´â•©â•§â•¨}
       convert_vga_to_acs:=$f800+word('v');
-    #194, #203, #209, #210: {ÂËÑÒ}
+    #194, #203, #209, #210: {â”¬â•¦â•¤â•¥}
       convert_vga_to_acs:=$f800+word('w');
-    #195, #198, #199, #204: {ÃÆÇÌ}
+    #195, #198, #199, #204: {â”œâ•žâ•Ÿâ• }
       convert_vga_to_acs:=$f800+word('t');
-    #196, #205: {ÄÍ}
+    #196, #205: {â”€â•}
       convert_vga_to_acs:=$f800+word('q');
-    #179, #186: {³º}
+    #179, #186: {â”‚â•‘}
       convert_vga_to_acs:=$f800+word('x');
-    #197, #206, #215, #216: {ÅÎ×Ø}
+    #197, #206, #215, #216: {â”¼â•¬â•«â•ª}
       convert_vga_to_acs:=$f800+word('n');
-    #201, #213, #214, #218: {ÉÕÖÚ}
+    #201, #213, #214, #218: {â•”â•’â•“â”Œ}
       convert_vga_to_acs:=$f800+word('l');
-    #254: { þ }
+    #254: { â–  }
       convert_vga_to_acs:=word('*');
     { Shadows for Buttons }
-    #220  { Ü },
-    #223: { ß }
+    #220  { â–„ },
+    #223: { â–€ }
       convert_vga_to_acs:=$f800+word('a');
     else
       convert_vga_to_acs:=word(ch);
@@ -506,8 +508,8 @@ procedure UpdateTTY(Force:boolean);
 type
   tchattr=packed record
 {$ifdef ENDIAN_LITTLE}
-    ch : char;
-    attr : byte;
+    ch : array[0..3] of char; // by unxed
+    attr : array[0..3] of byte; // by unxed
 {$else}
     attr : byte;
     ch : char;
@@ -656,6 +658,7 @@ var
   function transform(const hstr:string):string;
 
   begin
+(*
     case convert of
       cv_linuxlowascii_to_vga:
         transform:=transform_linuxlowascii_to_vga(hstr);
@@ -666,8 +669,9 @@ var
       cv_cp437_to_UTF8:
       	transform:=transform_cp437_to_UTF8(hstr);
       else
+*)
         transform:=hstr;
-    end;
+//    end;
   end;
 
   procedure outdata(hstr:string);
@@ -782,13 +786,13 @@ begin
            if chattr.ch=' ' then
             begin
               if Spaces=0 then
-               SpaceAttr:=chattr.Attr;
-              if (chattr.attr and $f0)=(spaceattr and $f0) then
-               chattr.Attr:=SpaceAttr
+               SpaceAttr:=chattr.Attr[0]; // by unxed
+              if (chattr.attr[0] and $f0)=(spaceattr and $f0) then // by unxed
+               chattr.Attr[0]:=SpaceAttr // by unxed
               else
                begin
                  OutSpaces;
-                 SpaceAttr:=chattr.Attr;
+                 SpaceAttr:=chattr.Attr[0]; // by unxed
                end;
               inc(Spaces);
             end
@@ -801,9 +805,9 @@ begin
                   Chattr.Attr:= $ff xor Chattr.Attr;
                   ChAttr.ch:=chr(ord(chattr.ch)+ord('A')-1);
                 end;}
-              if LastAttr<>chattr.Attr then
-               OutClr(chattr.Attr);
-              OutData(transform(chattr.ch));
+              if LastAttr<>chattr.Attr[0] then // by unxed
+               OutClr(chattr.Attr[0]); // by unxed
+              OutData(transform(chattr.ch)); // by unxed
               LastX:=x+1;
               LastY:=y;
             end;
@@ -827,18 +831,18 @@ begin
     OutData(#8);
     {Output last char}
     chattr:=tchattr(p[1]);
-    if LastAttr<>chattr.Attr then
-     OutClr(chattr.Attr);
-    OutData(transform(chattr.ch));
+    if LastAttr<>chattr.Attr[0] then // by unxed
+     OutClr(chattr.Attr[0]); // by unxed
+    OutData(transform(chattr.ch)); // by unxed
     inc(LastX);
 //    OutData(XY2Ansi(ScreenWidth-1,ScreenHeight,LastX,LastY));
 //   OutData(GetTermString(Insert_character));
     OutData(#8+#27+'[1@');
 
     chattr:=tchattr(p^);
-    if LastAttr<>chattr.Attr then
-     OutClr(chattr.Attr);
-    OutData(transform(chattr.ch));
+    if LastAttr<>chattr.Attr[0] then // by unxed
+     OutClr(chattr.Attr[0]); // by unxed
+    OutData(transform(chattr.ch)); // by unxed
     inc(LastX);
    end;
   OutData(XY2Ansi(CursorX+1,CursorY+1,LastX,LastY));

@@ -19,7 +19,7 @@ type
   end;
   TVideoModeSelector = function (const VideoMode: TVideoMode; Params: Longint): Boolean;
 
-  TVideoCell = Word;
+  TVideoCell = Int64;
   PVideoCell = ^TVideoCell;
 
   TVideoBuf = array[0..{$ifdef CPU16}16382{$else}32759{$endif}] of TVideoCell;

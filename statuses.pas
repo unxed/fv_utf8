@@ -80,28 +80,28 @@ const
   CStatus    =  #1#2#3;
 {$ifndef cdPrintDoc}
 {#F+}
-{İTStatus.CStatus palette
-ßßßßßßßßßßßßßßßßßßßßßßßßß}
+{â–ŒTStatus.CStatus palette
+â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€}
 {#F-}
 {$endif cdPrintDoc}
 { Status views use the default palette, CStatus, to map onto the first three
 entries in the standard window palette. }
 {#F+}
 {              1    2    3
-           ÉÍÍÍÍÑÍÍÍÍÑÍÍÍÍ»
- CStatus   º  1 ³  2 ³  3 º
-           ÈÍÍÑÍÏÍÍÑÍÏÍÍÑÍ¼
-Normal TextÄÄÄÙ    ³    ³
-OtherÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ    ³
-Highlighted TextÄÄÄÄÄÄÄÄÙ }
+           â•”â•â•â•â•â•¤â•â•â•â•â•¤â•â•â•â•â•—
+ CStatus   â•‘  1 â”‚  2 â”‚  3 â•‘
+           â•šâ•â•â•¤â•â•§â•â•â•¤â•â•§â•â•â•¤â•â•
+Normal Textâ”€â”€â”€â”˜    â”‚    â”‚
+Otherâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚
+Highlighted Textâ”€â”€â”€â”€â”€â”€â”€â”€â”˜ }
 {#F-}
 {#X TStatus }
 
   CAppStatus =  #2#5#4;
 {$ifndef cdPrintDoc}
 {#F+}
-{İTAppStatus.CAppStatus palette
-ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß}
+{â–ŒTAppStatus.CAppStatus palette
+â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€}
 {#F-}
 {$endif cdPrintDoc}
 { Status views which are inserted into the application rather than a dialog
@@ -109,12 +109,12 @@ or window use the default palette, CAppStatus, to map onto the application
 object's palette. }
 {#F+}
 {                 1    2    3
-              ÉÍÍÍÍÑÍÍÍÍÑÍÍÍÍ»
- CAppStatus   º  2 ³  5 ³  4 º
-              ÈÍÍÑÍÏÍÍÑÍÏÍÍÑÍ¼
-Normal TextÄÄÄÄÄÄÙ    ³    ³
-OtherÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ    ³
-Highlighted TextÄÄÄÄÄÄÄÄÄÄÄÙ }
+              â•”â•â•â•â•â•¤â•â•â•â•â•¤â•â•â•â•â•—
+ CAppStatus   â•‘  2 â”‚  5 â”‚  4 â•‘
+              â•šâ•â•â•¤â•â•§â•â•â•¤â•â•§â•â•â•¤â•â•
+Normal Textâ”€â”€â”€â”€â”€â”€â”˜    â”‚    â”‚
+Otherâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚
+Highlighted Textâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ }
 {#F-}
     {#X tvStatus TAppStatus }
 
@@ -122,20 +122,20 @@ Highlighted TextÄÄÄÄÄÄÄÄÄÄÄÙ }
   CBarGauge = CStatus + #16#19;
 {$ifndef cdPrintDoc}
 {#F+}
-{İTBarGauge.CBarGauge palette
-ßßßßßßßßßßßßßßßßßßßßßßßßßßßßß}
+{â–ŒTBarGauge.CBarGauge palette
+â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€}
 {#F-}
 {$endif cdPrintDoc}
 { TBarGauge's use the default palette, CBarGauge, to map onto the dialog or
 window owner's palette. }
 {#F+}
 {                 1    2    3   4    5
-              ÉÍÍÍÍÑÍÍÍÍÑÍÍÍÍÑÍÍÍÍÑÍÍÍÍ»
- CAppStatus   º  2 ³  5 ³  4 ³ 16 ³ 19 º
-              ÈÍÍÑÍÏÍÍÑÍÏÍÍÑÍÏÍÍÑÍÏÍÍÑÍ¼
-Normal TextÄÄÄÄÄÄÙ    ³    ³    ³    ÀÄÄÄÄ filled in bar
-OtherÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ    ³    ÀÄÄÄÄÄÄÄÄÄ empty bar
-Highlighted TextÄÄÄÄÄÄÄÄÄÄÄÙ }
+              â•”â•â•â•â•â•¤â•â•â•â•â•¤â•â•â•â•â•¤â•â•â•â•â•¤â•â•â•â•â•—
+ CAppStatus   â•‘  2 â”‚  5 â”‚  4 â”‚ 16 â”‚ 19 â•‘
+              â•šâ•â•â•¤â•â•§â•â•â•¤â•â•§â•â•â•¤â•â•§â•â•â•¤â•â•§â•â•â•¤â•â•
+Normal Textâ”€â”€â”€â”€â”€â”€â”˜    â”‚    â”‚    â”‚    â””â”€â”€â”€â”€ filled in bar
+Otherâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€ empty bar
+Highlighted Textâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ }
 {#F-}
     {#X tvStatus TBarGauge }
 
@@ -143,22 +143,22 @@ Highlighted TextÄÄÄÄÄÄÄÄÄÄÄÙ }
 {#T sdXXXX }
 {$ifndef cdPrintDoc}
 {#F+}
-{ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-İ sdXXXX constants   (STDDLG unit) Ş
-ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß}
+{â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„
+â–Œ sdXXXX constants   (STDDLG unit) â–
+â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€}
 {#F-}
 {$endif cdNoPrintDoc}
 { sdXXXX constants are used to determine the types of buttons displayed in a
 #TStatusDlg# or #TStatusMessageDlg#. }
 {#F+}
-{    Constant      ³ Value ³ Meaning
-ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍØÍÍÍÍÍÍÍØÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ
-  sdNone          ³ $0000 ³ no buttons
-  sdCancelButton  ³ $0001 ³ show Cancel button
-  sdPauseButton   ³ $0002 ³ show Pause button
-  sdResumeButton  ³ $0004 ³ show Resume button
-  sdAllButtons    ³ $0008 ³ show Cancel, Pause and Resume
-                  ³       ³   buttons }
+{    Constant      â”‚ Value â”‚ Meaning
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•ªâ•â•â•â•â•â•â•â•ªâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  sdNone          â”‚ $0000 â”‚ no buttons
+  sdCancelButton  â”‚ $0001 â”‚ show Cancel button
+  sdPauseButton   â”‚ $0002 â”‚ show Pause button
+  sdResumeButton  â”‚ $0004 â”‚ show Resume button
+  sdAllButtons    â”‚ $0008 â”‚ show Cancel, Pause and Resume
+                  â”‚       â”‚   buttons }
 {#Z+}
   sdNone                 = $0000;
   sdCancelButton         = $0001;
@@ -168,7 +168,7 @@ Highlighted TextÄÄÄÄÄÄÄÄÄÄÄÙ }
 {#Z-}
   {#X tvStatus TStatusDlg TStatusMessageDlg }
 
-  SpinChars : String[4] = '³/Ä\';
+  SpinChars : String[4] = 'â”‚/â”€\';
     { SpinChars are the characters used by a #TSpinnerGauge# when it is drawn.
       Only one character is displayed at a time.  The string is cycled
       through then started over again until the view is disposed. }
@@ -663,9 +663,9 @@ const
 procedure RegisterStatuses;
 {$ifndef cdPrintDoc}
 {#F+}
-{ÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜÜ
-İRegisterStatuses procedure   (Statuses unit)Ş
-ßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßßß}
+{â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„â–„
+â–ŒRegisterStatuses procedure   (Statuses unit)â–
+â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€â–€}
 {#F-}
 {$endif cdPrintDoc}
   { RegisterStatuses calls RegisterType for each of the status view and

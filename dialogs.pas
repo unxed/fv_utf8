@@ -55,6 +55,7 @@ UNIT Dialogs;
 {====================================================================}
 
 USES
+   sysutils,
    {$IFDEF OS_WINDOWS}                                { WIN/NT CODE }
        Windows,                                       { Standard units }
    {$ENDIF}
@@ -1855,7 +1856,7 @@ END;
 PROCEDURE TButton.Draw;
 VAR I, J, Pos: Sw_Integer;
     Bc: Word; Db: TDrawBuffer;
-    C : char;
+    C : string;
 BEGIN
    If (State AND sfDisabled <> 0) Then                { Button disabled }
      Bc := GetColor($0404) Else Begin                 { Disabled colour }
@@ -1902,14 +1903,15 @@ BEGIN
       Bc:=GetColor(8);
       if not DownFlag then
         begin
-          c:='Ü';
-          MoveChar(Db,c,Bc,1);
+          c:='â–„';
+          //MoveChar(Db,c,Bc,1);//by unxed
+          MoveStr(Db,c,Bc);//by unxed
           WriteLine(Size.X-1, 0, 1, 1, Db);
         end;
       MoveChar(Db,' ',Bc,1);
       if DownFlag then c:=' '
-      else c:='ß';
-      MoveChar(Db[1],c,Bc,Size.X-1);
+      else c:='â–€';
+      FillStr(Db[1],c,Bc,Size.X-1); // by unxed; ex-MoveChar
       WriteLine(0, 1, Size.X, 1, Db);
     End;
 END;
@@ -2221,14 +2223,14 @@ BEGIN
            MoveChar(B[Col], ' ', Byte(Color),
              Size.X-Col);                         { Set this colour }
            MoveStr(B[Col], Icon, Byte(Color));        { Transfer icon string }
-           WordRec(B[Col+2]).Lo := Byte(Marker[
+           Int64Rec(B[Col+2]).Lo := Byte(Marker[
              MultiMark(Cur) + 1]);                    { Transfer marker }
            MoveCStr(B[Col+5], PString(Strings.At(
              Cur))^, Color);                          { Transfer item string }
            If ShowMarkers AND (State AND sfFocused <> 0)
            AND (Cur = Sel) Then Begin                 { Current is selected }
-             WordRec(B[Col]).Lo := Byte(SpecialChars[0]);
-              WordRec(B[Column(Cur+Size.Y)-1]).Lo
+             Int64Rec(B[Col]).Lo := Byte(SpecialChars[0]);
+              Int64Rec(B[Column(Cur+Size.Y)-1]).Lo
                 := Byte(SpecialChars[1]);             { Set special character }
            End;
          End;
@@ -3055,7 +3057,7 @@ BEGIN
    End;
    MoveChar(B[0], ' ', Byte(Color), Size.X);          { Clear the buffer }
    If (Text <> Nil) Then MoveCStr(B[1], Text^, Color);{ Transfer label text }
-   If ShowMarkers Then WordRec(B[0]).Lo := Byte(
+   If ShowMarkers Then Int64Rec(B[0]).Lo := Byte(
      SpecialChars[SCOff]);                            { Show marker if req }
    WriteLine(0, 0, Size.X, 1, B);                     { Write the text }
 END;

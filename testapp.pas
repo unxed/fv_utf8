@@ -1,5 +1,7 @@
 PROGRAM testapp;
 
+//{$codepage UTF8}
+
 { $UNDEF OS2PM}
 
 {$IFDEF OS2PM}
@@ -37,6 +39,7 @@ PROGRAM testapp;
 
 {$I platform.inc}
   USES
+     video,
 {$IFDEF OS2PM}
      {$IFDEF OS_OS2} Os2Def, os2PmApi,  {$ENDIF}
 {$ENDIF OS2PM}
@@ -190,7 +193,7 @@ BEGIN
    GetExtent(R);                                      { Get view extents }
    R.B.Y := R.A.Y + 1;                                { One line high  }
    MenuBar := New(PMenuBar, Init(R, NewMenu(
-    NewSubMenu('~F~ile', 0, NewMenu(
+    NewSubMenu('Файл ~F~ile', 0, NewMenu(
       StdFileMenuItems(Nil)),                         { Standard file menu }
     NewSubMenu('~E~dit', 0, NewMenu(
       StdEditMenuItems(
@@ -437,6 +440,10 @@ VAR I: Integer; R: TRect; P: PGroup; MyApp: TTvDemo;
     {$IFDEF OS_OS2} Message: QMSg; Event: TEvent; {$ENDIF}
 {$ENDIF OS2PM}
 BEGIN
+
+   //internal_codepage:=utf8;
+   //external_codepage:=utf8;
+
    (*SystemPalette := CreateRGBPalette(256);            { Create palette }
    For I := 0 To 15 Do Begin
      GetSystemRGBEntry(I, RGB);                       { Get palette entry }
