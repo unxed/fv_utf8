@@ -1,8 +1,8 @@
 program video_test;
 
-//{$codepage utf8}
+{$codepage utf8} // need 'uses cwstring' for this to work
 
-uses video, sysutils;
+uses video, sysutils, cwstring;
 
 var
  c: TVideoCell;

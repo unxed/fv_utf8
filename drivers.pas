@@ -910,11 +910,24 @@ end;
 {  CStrLen -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 25May96 LdB           }
 {---------------------------------------------------------------------------}
 FUNCTION CStrLen (Const S: String): Sw_Integer;
-VAR I, J: Sw_Integer;
+VAR I, J: Sw_Integer; skip: boolean;
 BEGIN
    J := 0;                                            { Set result to zero }
-   For I := 1 To Length(S) Do
-     If (S[I] <> '~') Then Inc(J);                    { Inc count if not ~ }
+   skip := false;
+   For I := 1 To Length(S) Do Begin
+
+   // UTF-8 "processing"
+   // FIXME: this is kind of "emulating" UTF-8 processing,
+   // not real processing itself
+     If (not skip and (Ord(S[I]) > 127)) Then Begin
+        skip := true;
+     End;
+
+     If (skip) Then
+        skip := false
+     Else
+         If (S[I] <> '~') Then Inc(J);                    { Inc count if not ~ }
+   End;
    CStrLen := J;                                      { Return length }
 END;
 
@@ -977,10 +990,12 @@ BEGIN
    J := 0;                                            { Start position }
    skip := false;
    For I := 1 To Length(Str) Do Begin                 { For each character }
+
      if (skip) Then Begin
         skip := false;
         continue;
      End;                  
+
      If (Str[I] <> '~') Then Begin                    { Not tilde character }	
        If (Ord(Str[I]) > 127) Then Begin
 
