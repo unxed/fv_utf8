@@ -27,7 +27,7 @@
 
 UNIT Views;
 
-{$CODEPAGE cp437}
+//{$CODEPAGE utf8}
 
 {<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>}
                                   INTERFACE
@@ -4196,7 +4196,7 @@ end;
 procedure TView.do_writeViewRec1(x1,x2:Sw_integer; p:PView; shadowCounter:Sw_integer);
 var
   G      : PGroup;
-  c      : Word;
+  c      : Int64;
   BufPos,
   SrcPos,
   l,dx : Sw_integer;
@@ -4212,13 +4212,13 @@ begin
           SrcPos:=x1 - staticVar2.offset;
           l:=x2-x1;
           if (shadowCounter=0) then
-           move(staticVar1^[SrcPos],PVideoBuf(G^.buffer)^[BufPos],l shl 1)
+           move(staticVar1^[SrcPos],PVideoBuf(G^.buffer)^[BufPos],(l shl 1)*4) // *4 by unxed
           else
            begin { paint with shadowAttr }
              while (l>0) do
               begin
                 c:=staticVar1^[SrcPos];
-                WordRec(c).hi:=shadowAttr;
+                Int64Rec(c).hi:=shadowAttr;
                 PVideoBuf(G^.buffer)^[BufPos]:=c;
                 inc(BufPos);
                 inc(SrcPos);

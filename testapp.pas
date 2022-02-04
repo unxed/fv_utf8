@@ -1,6 +1,6 @@
 PROGRAM testapp;
 
-//{$codepage UTF8}
+//{$codepage utf8}
 
 { $UNDEF OS2PM}
 

@@ -21,7 +21,7 @@
 unit tabs;
 
 {$I platform.inc}    (* Multi-platform support defines *)
-{$CODEPAGE cp437}
+//{$CODEPAGE utf8}
 
 interface
 

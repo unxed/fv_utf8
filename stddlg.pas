@@ -38,6 +38,7 @@ unit StdDlg;
 }
 
 {$i platform.inc}
+//{$CODEPAGE utf8}
 
 {$ifdef PPC_FPC}
   {$H-}

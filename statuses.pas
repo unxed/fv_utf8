@@ -1,7 +1,7 @@
 {$V-}
 unit Statuses;
 
-{$CODEPAGE cp437}
+//{$CODEPAGE utf8}
 
 {#Z+}
 {  Free Vision Status Objects Unit

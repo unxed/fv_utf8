@@ -27,7 +27,7 @@
 
 UNIT Dialogs;
 
-{$CODEPAGE cp437}
+//{$CODEPAGE utf8}
 
 {2.0 compatibility}
 {$ifdef VER2_0}
