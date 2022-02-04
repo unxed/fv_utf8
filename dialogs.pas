@@ -2229,9 +2229,9 @@ BEGIN
              Cur))^, Color);                          { Transfer item string }
            If ShowMarkers AND (State AND sfFocused <> 0)
            AND (Cur = Sel) Then Begin                 { Current is selected }
-             Int64Rec(B[Col]).Lo := Byte(SpecialChars[0]);
+             Int64Rec(B[Col]).Lo := LongIntFromStr(SpecialChars[0]);
               Int64Rec(B[Column(Cur+Size.Y)-1]).Lo
-                := Byte(SpecialChars[1]);             { Set special character }
+                := LongIntFromStr(SpecialChars[1]);             { Set special character }
            End;
          End;
        End;
@@ -3057,7 +3057,7 @@ BEGIN
    End;
    MoveChar(B[0], ' ', Byte(Color), Size.X);          { Clear the buffer }
    If (Text <> Nil) Then MoveCStr(B[1], Text^, Color);{ Transfer label text }
-   If ShowMarkers Then Int64Rec(B[0]).Lo := Byte(
+   If ShowMarkers Then Int64Rec(B[0]).Lo := LongIntFromStr (
      SpecialChars[SCOff]);                            { Show marker if req }
    WriteLine(0, 0, Size.X, 1, B);                     { Write the text }
 END;

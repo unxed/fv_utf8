@@ -511,7 +511,7 @@ TYPE
 {                   TScrollBar OBJECT - SCROLL BAR OBJECT                   }
 {---------------------------------------------------------------------------}
 TYPE
-   TScrollChars = Array [0..4] of Char;
+   TScrollChars = Array [0..4] of String;
 
    TScrollBar = OBJECT (TView)
          Value : Sw_Integer;                             { Scrollbar value }
@@ -690,7 +690,7 @@ CONST
 
 { Characters used for drawing selected and default items in  }
 { monochrome color sets                                      }
-   SpecialChars: Array [0..5] Of Char = (#175, #174, #26, #27, ' ', ' ');
+   SpecialChars: Array [0..5] Of String = ('»', '«', '→', '←', ' ', ' ');
 
 {+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++}
 {                        STREAM REGISTRATION RECORDS                        }
@@ -3006,9 +3006,9 @@ end;
 CONSTRUCTOR TScrollBar.Init (Var Bounds: TRect);
 const
   VChars: array[boolean] of TScrollChars =
-     (('^','V', #177, #254, #178),(#30, #31, #177, #254, #178));
+     (('^','V', '▒', '■', '▓'),('▲', '▼', '▒', '■', '▓'));
   HChars: array[boolean] of TScrollChars =
-     (('<','>', #177, #254, #178),(#17, #16, #177, #254, #178));
+     (('<','>', '▒', '■', '▓'),('◀', '▶', '▒', '■', '▓'));
 BEGIN
    Inherited Init(Bounds);                            { Call ancestor }
    PgStep := 1;                                       { Page step size = 1 }
@@ -3312,15 +3312,15 @@ var
   B: TDrawBuffer;
 begin
   S := GetSize - 1;
-  MoveChar(B[0], Chars[0], GetColor(2), 1);
+  FillStr(B[0], Chars[0], GetColor(2), 1);
   if Max = Min then
-    MoveChar(B[1], Chars[4], GetColor(1), S - 1)
+    FillStr(B[1], Chars[4], GetColor(1), S - 1)
   else
    begin
-     MoveChar(B[1], Chars[2], GetColor(1), S - 1);
-     MoveChar(B[Pos], Chars[3], GetColor(3), 1);
+     FillStr(B[1], Chars[2], GetColor(1), S - 1);
+     FillStr(B[Pos], Chars[3], GetColor(3), 1);
    end;
-  MoveChar(B[S], Chars[1], GetColor(2), 1);
+  FillStr(B[S], Chars[1], GetColor(2), 1);
   WriteBuf(0, 0, Size.X, Size.Y, B);
 end;
 
@@ -3552,13 +3552,13 @@ BEGIN
          Text := Copy(Text, Indent, ColWidth);        { Select right bit }
          MoveStr(B[CurCol+1], Text, Color);           { Transfer to buffer }
          If ShowMarkers Then Begin
-           Int64Rec(B[CurCol]).Lo := Byte(
-             SpecialChars[SCOff]);                        { Set marker character }
-           Int64Rec(B[CurCol+ColWidth-2]).Lo := Byte(
-             SpecialChars[SCOff+1]);                        { Set marker character }
+           Int64Rec(B[CurCol]).Lo := 
+             LongIntFromStr(SpecialChars[SCOff]);     { Set marker character }
+           Int64Rec(B[CurCol+ColWidth-2]).Lo := 
+             LongIntFromStr(SpecialChars[SCOff+1]);   { Set marker character }
          End;
        End;
-       MoveChar(B[CurCol+ColWidth-1], #179,
+       FillStr(B[CurCol+ColWidth-1], '│',
          GetColor(5), 1);                             { Put centre line marker }
      End;
      WriteLine(0, I, Size.X, 1, B);                 { Write line to screen }

@@ -1453,9 +1453,9 @@ BEGIN
    HintBuf := Hint(HelpCtx);                          { Get hint string }
    If (HintBuf <> '') Then Begin                      { Hint present }
      {$IFNDEF OS_WINDOWS}
-     MoveChar(B[I], #179, Byte(CNormal), 1);          { '|' char to buffer }
+     FillStr(B[I], '│', Byte(CNormal), 1);          { '|' char to buffer }
      {$ELSE}
-     MoveChar(B[I], #124, Byte(CNormal), 1);          { '|' char to buffer }
+     FillStr(B[I], '|', Byte(CNormal), 1);          { '|' char to buffer }
      {$ENDIF}
      Inc(I, 2);                                       { Move along }
      MoveStr(B[I], HintBuf, Byte(CNormal));           { Move hint to buffer }

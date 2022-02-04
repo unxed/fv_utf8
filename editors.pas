@@ -1180,7 +1180,7 @@ end; { TIndicator.Init }
 procedure TIndicator.Draw;
 VAR
   Color : Byte;
-  Frame : Char;
+  Frame : String;
   L     : array[0..1] of Longint;
   S     : String[15];
   B     : TDrawBuffer;
@@ -1188,14 +1188,14 @@ begin
   if State and sfDragging = 0 then
     begin
       Color := GetColor (1);
-      Frame := #205;
+      Frame := '═';
     end
   else
     begin
       Color := GetColor (2);
-      Frame := #196;
+      Frame := '─';
     end;
-  MoveChar (B, Frame, Color, Size.X);
+  FillStr (B, Frame, Color, Size.X);
   { If the text has been modified, put an 'M' in the TIndicator display. }
   if Modified then
     Int64Rec(B[1]).Lo := 77;
@@ -1203,12 +1203,12 @@ begin
   if WordWrap then
     Int64Rec(B[2]).Lo := 87
   else
-    Int64Rec(B[2]).Lo := Byte (Frame);
+    Int64Rec(B[2]).Lo := LongIntFromStr (Frame);
   { If AutoIndent is active put an 'I' in TIndicator display. }
   if AutoIndent then
     Int64Rec(B[0]).Lo := 73
   else
-    Int64Rec(B[0]).Lo := Byte (Frame);
+    Int64Rec(B[0]).Lo := LongIntFromStr (Frame);
   L[0] := Location.Y + 1;
   L[1] := Location.X + 1;
   FormatStr (S, ' %d:%d ', L);

@@ -335,7 +335,11 @@ unchanged if Attr is zero.
 ---------------------------------------------------------------------}
 PROCEDURE MoveStr (Var Dest; Const Str: String; Attr: Byte);
 
+// as MoveChar, but for utf8-encoded chars in string typed vars
 PROCEDURE FillStr (Var Dest; Const Str: String; Attr: Byte; Count: Sw_Word);
+
+// moves bytes "as is" from string to longint
+FUNCTION LongIntFromStr (Str: String) : LongInt;
 
 {-MoveCStr-----------------------------------------------------------
 The characters in Str are moved into the low bytes of corresponding
@@ -935,11 +939,33 @@ BEGIN
    For I := 1 To Count Do Begin
      P := @TInt64Array(Dest)[I-1];
      For J := 1 To 4 Do Begin
-       if (Ord(Str[0]) >= J) then Int64Rec(P^).Bytes[J-1] := Byte(Str[J])
+       if (Ord(Str[0]) >= J) then Int64Rec(P^).Bytes[J-1] := Ord(Str[J])
        else Int64Rec(P^).Bytes[J-1] := 0;
      End;
      Int64Rec(P^).Hi := Attr;
    End;
+END;
+
+FUNCTION LongIntFromStr (Str: String) : LongInt;
+VAR I: Integer; R: LongInt;
+
+type LongRec = packed record
+  case Integer of
+    0: (
+        Hi: Word;
+        Lo: Word;
+      );
+    1: (
+        Bytes: array [0..3] of Byte;
+      );
+end;
+
+BEGIN
+	R := 0;
+	For I := 1 To Length(Str) Do Begin
+        LongRec(R).Bytes[I-1] := Ord(Str[I]);
+	End;
+	LongIntFromStr := R;
 END;
 
 {---------------------------------------------------------------------------}
