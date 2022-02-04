@@ -1865,7 +1865,7 @@ end; { TEditor.Draw }
 procedure TEditor.DrawLines (Y, Count : Sw_Integer; LinePtr : Sw_Word);
 VAR
   Color : Word;
-  B     : array[0..MaxLineLength - 1] of Sw_Word;
+  B     : array[0..MaxLineLength - 1] of Int64; // by unxed Sw_Word to Int64 
 begin
   Color := GetColor ($0201);
   while Count > 0 do
@@ -1901,20 +1901,21 @@ procedure TEditor.FormatLine (var DrawBuf; LinePtr : Sw_Word;
                                   Width  : Sw_Integer;
                                   Colors : Word);
 var
-  outptr : pword;
+  outptr : ^Int64; // by unxed, was: pword
   outcnt,
   idxpos : Sw_Word;
   attr   : Word;
 
   procedure FillSpace(i:Sw_Word);
   var
-    w : word;
+    w : Int64;
   begin
     inc(OutCnt,i);
-    w:=32 or attr;
+    //w:=32 or attr;
     while (i>0) do
      begin
-       OutPtr^:=w;
+       Int64Rec(OutPtr^).Hi:=attr;
+       Int64Rec(OutPtr^).Lo:=32;
        inc(OutPtr);
        dec(i);
      end;
@@ -1942,7 +1943,13 @@ var
          else
            begin
              inc(OutCnt);
-             OutPtr^:=ord(p^) or attr;
+             // "deal" with utf-8
+             Int64Rec(OutPtr^).Hi:=attr;
+             Int64Rec(OutPtr^).Lo:=ord(p^);
+             if (ord(p^) > 128) Then Begin
+                 inc(p);
+                 Int64Rec(OutPtr^).Bytes[1]:=ord(p^);
+             End;
              inc(OutPtr);
            end;
        end; { case }
@@ -1955,16 +1962,16 @@ begin
   OutCnt:=0;
   OutPtr:=@DrawBuf;
   idxPos:=LinePtr;
-  attr:=lo(Colors) shl 8;
+  attr:=lo(Colors) shl 32;
   if FormatUntil(SelStart) then
    exit;
-  attr:=hi(Colors) shl 8;
+  attr:=hi(Colors) shl 32;
   if FormatUntil(CurPtr) then
    exit;
   inc(idxPos,GapLen);
   if FormatUntil(SelEnd+GapLen) then
    exit;
-  attr:=lo(Colors) shl 8;
+  attr:=lo(Colors) shl 32;
   if FormatUntil(BufSize) then
    exit;
 { fill up until width }

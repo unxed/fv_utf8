@@ -43,7 +43,7 @@ UNIT AsciiTab;
 {$V-} { Turn off strict VAR strings }
 {====================================================================}
 
-USES FVConsts, Objects, Drivers, Views, App;      { Standard GFV units }
+USES sysutils, FVConsts, Objects, Drivers, Views, App;      { Standard GFV units }
 
 {***************************************************************************}
 {                        PUBLIC OBJECT DEFINITIONS                          }
@@ -147,7 +147,11 @@ begin
   NormColor:=GetColor(1);
   For y:=0 to size.Y-1 do begin
     For x:=0 to size.X-1 do
-      B[x]:=(NormColor shl 8) or ((y*Size.X+x) and $ff);
+      B[x] := 0;
+      Int64Rec(B[x]).Hi:=NormColor;
+      Int64Rec(B[x]).Lo:=33; // FIXME '!' sign
+      //Int64Rec(B[x]).Lo:=((y*Size.X+x) and $ff);
+      //B[x]:=(NormColor shl 8) or ((y*Size.X+x) and $ff);
     WriteLine(0,Y,Size.X,1,B);
   end;
   DrawCurPos(true);
@@ -156,13 +160,15 @@ end;
 procedure TTable.DrawCurPos(enable : boolean);
 var
   Color : byte;
-  B : word;
+  B : Int64;
 begin
   Color:=GetColor(1);
   { add blinking if enable }
   If Enable then
     Color:=((Color and $F) shl 4) or (Color shr 4);
-  B:=(Color shl 8) or ((Cursor.Y*Size.X+Cursor.X) and $ff);
+//  B:=(Color shl 32) or ((Cursor.Y*Size.X+Cursor.X) and $ff);
+  Int64Rec(B).Hi:=Color;
+  Int64Rec(B).Lo:=63; // '?' sign // FIXME
   WriteLine(Cursor.X,Cursor.Y,1,1,B);
 end;
 
