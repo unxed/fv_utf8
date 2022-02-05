@@ -1905,7 +1905,7 @@ BEGIN
         begin
           c:='▄';
           //MoveChar(Db,c,Bc,1);//by unxed
-          MoveStr(Db,c,Bc);//by unxed
+          FillStr(Db,c,Bc,1);//by unxed
           WriteLine(Size.X-1, 0, 1, 1, Db);
         end;
       MoveChar(Db,' ',Bc,1);
@@ -3278,7 +3278,9 @@ END;
 PROCEDURE THistory.Draw;
 VAR B: TDrawBuffer;
 BEGIN
-   MoveCStr(B,#222'~v~'#221, GetColor($0102));   { Set buffer data }
+   // FIXME: UTF8 chars with 3-byte length
+   //MoveCStr(B,'▐~v~▌', GetColor($0102));   { Set buffer data }
+   MoveCStr(B,'|~v~|', GetColor($0102));   { Set buffer data }
    WriteLine(0, 0, Size.X, Size.Y, B);                { Write buffer }
 END;
 
