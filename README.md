@@ -9,4 +9,6 @@ fpc testapp.pas
 
 License: Free Pascal's one (LGPL-with-exception)
 
+Some [notes](http://www.freepascal.ru/forum/viewtopic.php?p=163609#p163609) on adoption process (in Russian).
+
 See also: C++ Turbo Vision UTF-8 [adoption](https://github.com/magiblot/tvision).
