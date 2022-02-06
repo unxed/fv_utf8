@@ -63,7 +63,7 @@ UNIT Drivers;
 
 USES
    sysutils,
-   lazutf8,
+   //lazutf8,
    {$IFDEF OS_WINDOWS}                                { WIN/NT CODE }
          Windows,                                     { Standard unit }
    {$ENDIF}
@@ -920,7 +920,7 @@ BEGIN
         Dec(skip);
         continue;
      End;                  
-     skip := UTF8CodepointStrictSize(@S[I]) - 1;
+     skip := Utf8CodePointLen(@S[I], 4, False) - 1;
      If (S[I] <> '~') Then Inc(J);                    { Inc count if not ~ }
    End;
    CStrLen := J;                                      { Return length }
@@ -940,7 +940,7 @@ BEGIN
 
      If ((Str[I] <> '~') OR NOT C) Then Begin                    { Not tilde character }	
 
-       skip := UTF8CodepointStrictSize(@Str[I]) - 1;
+       skip := Utf8CodePointLen(@Str[I], 4, False) - 1;
        
        P := @TInt64Array(Dest)[J];                     { Pointer to Sw_Word }
        If (Lo(Attrs) <> 0) Then
@@ -1051,7 +1051,7 @@ BEGIN
         continue;
      End;                  
 
-     skip := UTF8CodepointStrictSize(@TByteArray(Source)[I-1]) - 1;
+     skip := Utf8CodePointLen(@TByteArray(Source)[I-1], 4, False) - 1;
 
      P := @TInt64Array(Dest)[J];                     { Pointer to Sw_Word }
      If (Attr <> 0) Then Int64Rec(P^).Hi := Attr;      { Copy attribute }
