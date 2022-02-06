@@ -2825,6 +2825,7 @@ var
   B: TDrawBuffer;
   Title: TTitleStr;
   Min, Max: TPoint;
+  Title2: string;
 begin
   if State and sfDragging <> 0 then
    begin
@@ -2867,14 +2868,17 @@ begin
    Title := '';
   if Title <> '' then
    begin
-     L := Length(Title);
+     L := UTF8Length(Title);
      if L > Width - 10 then
       L := Width - 10;
      if L < 0 then
       L := 0;
      I := (Width - L) shr 1;
      MoveChar(B[I - 1], ' ', CTitle, 1);
-     MoveBuf(B[I], Title[1], CTitle, L);
+
+     Title2 := Copy(Title, 0, UTF8CodepointToByteIndex(@Title, length(Title), L));
+     MoveStr(B[I], Title2, CTitle);
+
      MoveChar(B[I + L], ' ', CTitle, 1);
    end;
   if State and sfActive <> 0 then

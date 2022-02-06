@@ -1037,15 +1037,42 @@ END;
 {  MoveBuf -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 10Jul99 LdB           }
 {---------------------------------------------------------------------------}
 PROCEDURE MoveBuf (Var Dest, Source; Attr: Byte; Count: Sw_Word);
-VAR I: Word; P: ^Int64;
+VAR I, J: Word; P: ^Int64; skip: byte;
 BEGIN
 //	writeln('MoveBuf not tested');
 //	readln();
 //	halt();
+   skip := 0;
+   J := 0;                                            { Start position }
    For I := 1 To Count Do Begin
-     P := @TInt64Array(Dest)[I-1];                     { Pointer to Sw_Word }
+
+     if (skip > 0) Then Begin
+        Dec(skip);
+        continue;
+     End;                  
+
+     skip := UTF8CodepointStrictSize(@TByteArray(Source)[I-1]) - 1;
+
+     P := @TInt64Array(Dest)[J];                     { Pointer to Sw_Word }
      If (Attr <> 0) Then Int64Rec(P^).Hi := Attr;      { Copy attribute }
-     Int64Rec(P^).Lo := TByteArray(Source)[I-1];       { Copy source data }
+     
+     Int64Rec(P^).Lo := 0;
+
+     Int64Rec(P^).Bytes[0] := TByteArray(Source)[I-1];                { Copy string char }
+
+     If (skip > 0) Then Begin
+         Int64Rec(P^).Bytes[1] := TByteArray(Source)[I];                { Copy string char }
+     End;
+     If (skip > 1) Then Begin
+         Int64Rec(P^).Bytes[2] := TByteArray(Source)[I+1];                { Copy string char }
+     End;
+     If (skip > 2) Then Begin
+         Int64Rec(P^).Bytes[3] := TByteArray(Source)[I+2];                { Copy string char }
+     End;
+
+     Inc(J);
+
+     //Int64Rec(P^).Lo := TByteArray(Source)[I-1];       { Copy source data }
    End;
 END;
 
