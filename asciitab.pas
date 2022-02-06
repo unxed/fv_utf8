@@ -138,6 +138,14 @@ procedure RegisterASCIITab;
 {                          TTable OBJECT METHODS                            }
 {+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++}
 
+function FilterChars(AsciiChar: longint): longint;
+begin
+  if ((AsciiChar > 31) AND (AsciiChar < 127)) Then
+    FilterChars := AsciiChar
+  Else
+    FilterChars := ord('?');
+end;
+
 procedure TTable.Draw;
 var
   NormColor : byte;
@@ -146,12 +154,12 @@ var
 begin
   NormColor:=GetColor(1);
   For y:=0 to size.Y-1 do begin
-    For x:=0 to size.X-1 do
+    For x:=0 to size.X-1 do begin
       B[x] := 0;
       Int64Rec(B[x]).Hi:=NormColor;
-      Int64Rec(B[x]).Lo:=33; // FIXME '!' sign
-      //Int64Rec(B[x]).Lo:=((y*Size.X+x) and $ff);
+      Int64Rec(B[x]).Lo:=FilterChars((y*Size.X+x) and $ff);
       //B[x]:=(NormColor shl 8) or ((y*Size.X+x) and $ff);
+    end;
     WriteLine(0,Y,Size.X,1,B);
   end;
   DrawCurPos(true);
@@ -164,11 +172,12 @@ var
 begin
   Color:=GetColor(1);
   { add blinking if enable }
-  If Enable then
+  If Enable then begin
     Color:=((Color and $F) shl 4) or (Color shr 4);
 //  B:=(Color shl 32) or ((Cursor.Y*Size.X+Cursor.X) and $ff);
+  end;
   Int64Rec(B).Hi:=Color;
-  Int64Rec(B).Lo:=63; // '?' sign // FIXME
+  Int64Rec(B).Lo:=FilterChars((Cursor.Y*Size.X+Cursor.X) and $ff);
   WriteLine(Cursor.X,Cursor.Y,1,1,B);
 end;
 
@@ -244,12 +253,13 @@ procedure TReport.Draw;
   var
     stHex,stDec : string[3];
     s : string;
+    c : longint;
 begin
   Str(AsciiChar,StDec);
   while length(stDec)<3 do
     stDec:=' '+stDec;
   stHex:=hexstr(AsciiChar,2);
-  s:='Char "'+chr(AsciiChar)+'" Decimal: '+
+  s:='Char "'+chr(FilterChars(c))+'" Decimal: '+
      StDec+' Hex: $'+StHex+
      '  '; // //{!ss:fill gap. FormatStr function using be better}
   WriteStr(0,0,S,1);
