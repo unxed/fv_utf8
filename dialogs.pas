@@ -3278,9 +3278,7 @@ END;
 PROCEDURE THistory.Draw;
 VAR B: TDrawBuffer;
 BEGIN
-   // FIXME: UTF8 chars with 3-byte length
-   //MoveCStr(B,'▐~v~▌', GetColor($0102));   { Set buffer data }
-   MoveCStr(B,'|~v~|', GetColor($0102));   { Set buffer data }
+   MoveCStr(B,'▐~v~▌', GetColor($0102));   { Set buffer data }
    WriteLine(0, 0, Size.X, Size.Y, B);                { Write buffer }
 END;
 

@@ -48,6 +48,7 @@ UNIT Views;
 {====================================================================}
 
 USES
+   lazutf8,
    sysutils,
    {$IFDEF OS_WINDOWS}                                { WIN/NT CODE }
          Windows,                                     { Standard unit }
@@ -4401,16 +4402,20 @@ var
   l,i : Sw_word;
   B : TDrawBuffer;
   myColor : word;
+  Str2: string;
 begin
-  l:=length(Str);
+  l:=UTF8Length(Str);
   if l>0 then
    begin
      if l>maxViewWidth then
       l:=maxViewWidth;
      MyColor:=MapColor(Color);
-     MyColor:=MyColor shl 32; // 8->32 by unxed
-     for i:=0 to l-1 do
-       B[i]:=MyColor+ord(Str[i+1]);
+
+     Str2 := Copy(Str, 0, UTF8CodepointToByteIndex(@Str, length(Str), l));
+     MoveStr(B, Str2, MyColor);
+     //MyColor:=MyColor shl 32; // 8->32 by unxed
+     //for i:=0 to l-1 do
+     //  B[i]:=MyColor+ord(Str[i+1]);
      do_writeView(x,x+l,y,b);
    end;
   DrawScreenBuf(false);

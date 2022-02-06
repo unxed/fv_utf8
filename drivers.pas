@@ -63,6 +63,7 @@ UNIT Drivers;
 
 USES
    sysutils,
+   lazutf8,
    {$IFDEF OS_WINDOWS}                                { WIN/NT CODE }
          Windows,                                     { Standard unit }
    {$ENDIF}
@@ -910,34 +911,72 @@ end;
 {  CStrLen -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 25May96 LdB           }
 {---------------------------------------------------------------------------}
 FUNCTION CStrLen (Const S: String): Sw_Integer;
-VAR I, J: Sw_Integer; skip: boolean;
+VAR I, J: Sw_Integer; skip: byte;
 BEGIN
    J := 0;                                            { Set result to zero }
-   skip := false;
+   skip := 0;
    For I := 1 To Length(S) Do Begin
-
-     // UTF-8 "processing"
-     // FIXME: this is kind of "emulating" UTF-8 processing,
-     // not real processing itself
-
-     If (not skip and (Ord(S[I]) > 127)) Then Begin
-        skip := true;
-        Inc(J);
+     if (skip > 0) Then Begin
+        Dec(skip);
         continue;
-     End;
-
-     If (skip) Then
-        skip := false
-     Else
-         If (S[I] <> '~') Then Inc(J);                    { Inc count if not ~ }
-   
+     End;                  
+     skip := UTF8CodepointStrictSize(@S[I]) - 1;
+     If (S[I] <> '~') Then Inc(J);                    { Inc count if not ~ }
    End;
    CStrLen := J;                                      { Return length }
+END;
+
+PROCEDURE MoveCStrImpl (Var Dest; Const Str: String; Attrs: Word; C: Boolean);
+VAR B: Byte; I, J: Sw_Word; P: ^Int64; skip: byte;
+BEGIN
+   J := 0;                                            { Start position }
+   skip := 0;
+   For I := 1 To Length(Str) Do Begin                 { For each character }
+
+     if (skip > 0) Then Begin
+        Dec(skip);
+        continue;
+     End;                  
+
+     If ((Str[I] <> '~') OR NOT C) Then Begin                    { Not tilde character }	
+
+       skip := UTF8CodepointStrictSize(@Str[I]) - 1;
+       
+       P := @TInt64Array(Dest)[J];                     { Pointer to Sw_Word }
+       If (Lo(Attrs) <> 0) Then
+         Int64Rec(P^).Hi := Lo(Attrs);                 { Copy attribute }
+
+       Int64Rec(P^).Lo := 0;
+
+       Int64Rec(P^).Bytes[0] := Ord(Str[I]);                { Copy string char }
+
+       If (skip > 0) Then Begin
+           Int64Rec(P^).Bytes[1] := Ord(Str[I+1]);                { Copy string char }
+       End;
+       If (skip > 1) Then Begin
+           Int64Rec(P^).Bytes[2] := Ord(Str[I+2]);                { Copy string char }
+       End;
+       If (skip > 2) Then Begin
+           Int64Rec(P^).Bytes[3] := Ord(Str[I+3]);                { Copy string char }
+       End;
+       Inc(J);                                        { Next position }
+     End Else Begin
+       B := Hi(Attrs);                                { Hold attribute }
+       WordRec(Attrs).Hi := Lo(Attrs);                { Copy low to high }
+       WordRec(Attrs).Lo := B;                        { Complete exchange }
+     End;
+   End;
 END;
 
 {---------------------------------------------------------------------------}
 {  MoveStr -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 10Jul99 LdB           }
 {---------------------------------------------------------------------------}
+PROCEDURE MoveStr (Var Dest; Const Str: String; Attr: Byte);
+BEGIN
+  MoveCStrImpl (Dest, Str, Attr, False);
+END;
+
+(*
 PROCEDURE MoveStr (Var Dest; Const Str: String; Attr: Byte);
 VAR I: Word; P: ^Int64;
 BEGIN
@@ -947,6 +986,7 @@ BEGIN
      Int64Rec(P^).Lo := Byte(Str[I]);                  { Copy string char }
    End;
 END;
+*)
 
 // by unxed
 // Вместо MoveChar, для символа UTF-8 в виде строки
@@ -989,46 +1029,8 @@ END;
 {  MoveCStr -> Platforms DOS/DPMI/WIN/NT/OS2 - Updated 10Jul99 LdB          }
 {---------------------------------------------------------------------------}
 PROCEDURE MoveCStr (Var Dest; Const Str: String; Attrs: Word);
-VAR B: Byte; I, J: Sw_Word; P: ^Int64; skip: boolean;
 BEGIN
-   J := 0;                                            { Start position }
-   skip := false;
-   For I := 1 To Length(Str) Do Begin                 { For each character }
-
-     if (skip) Then Begin
-        skip := false;
-        continue;
-     End;                  
-
-     If (Str[I] <> '~') Then Begin                    { Not tilde character }	
-       If (Ord(Str[I]) > 127) Then Begin
-
-           // UTF-8 "processing"
-           // FIXME: this is kind of "emulating" UTF-8 processing,
-           // not real processing itself
-
-           P := @TInt64Array(Dest)[J];                     { Pointer to Sw_Word }
-           If (Lo(Attrs) <> 0) Then
-             Int64Rec(P^).Hi := Lo(Attrs);                 { Copy attribute }
-           Int64Rec(P^).Lo := 0;
-           Int64Rec(P^).Bytes[0] := Ord(Str[I]);                { Copy string char }
-           Int64Rec(P^).Bytes[1] := Ord(Str[I+1]);                { Copy string char }
-           Inc(J);                                        { Next position }
-           skip := true;
-
-       End Else Begin
-           P := @TInt64Array(Dest)[J];                     { Pointer to Sw_Word }
-           If (Lo(Attrs) <> 0) Then
-             Int64Rec(P^).Hi := Lo(Attrs);                 { Copy attribute }
-           Int64Rec(P^).Lo := Byte(Str[I]);                { Copy string char }
-           Inc(J);                                        { Next position }
-       End;
-     End Else Begin
-       B := Hi(Attrs);                                { Hold attribute }
-       WordRec(Attrs).Hi := Lo(Attrs);                { Copy low to high }
-       WordRec(Attrs).Lo := B;                        { Complete exchange }
-     End;
-   End;
+  MoveCStrImpl (Dest, Str, Attrs, True);
 END;
 
 {---------------------------------------------------------------------------}
