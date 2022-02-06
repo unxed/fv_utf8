@@ -11,6 +11,6 @@ fpc testapp.pas
 
 License: Free Pascal's one (LGPL-with-exception).
 
-Some [notes](http://www.freepascal.ru/forum/viewtopic.php?p=163609#p163609) on adoption process (in Russian). Related Free Pascal [issue](https://gitlab.com/freepascal.org/fpc/source/-/issues/21373). You may also be interested in [another effort](https://gitlab.com/freepascal.org/fpc/source/-/issues/21373#note_833019965) of Free Vision unicode adoption, that is avaiting to be integrated to the main Free Vision branch.
+Some [notes](http://www.freepascal.ru/forum/viewtopic.php?p=163609#p163609) on adoption process (in Russian). Related Free Pascal [issue](https://gitlab.com/freepascal.org/fpc/source/-/issues/21373). You may also be interested in [another effort](https://gitlab.com/freepascal.org/fpc/source/-/issues/21373#note_833019965) of Free Vision unicode adoption, that is awaiting to be integrated to the main Free Vision branch.
 
 See also: C++ Turbo Vision UTF-8 [adoption](https://github.com/magiblot/tvision).
