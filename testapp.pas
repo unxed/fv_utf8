@@ -257,7 +257,7 @@ begin
   New(StatusLine,
     Init(R,
       NewStatusDef(0, $EFFF,
-        NewStatusKey('~F3~ Open', kbF3, cmOpen,
+        NewStatusKey('Открыть ~F3~ Open', kbF3, cmOpen,
         NewStatusKey('~F4~ New', kbF4, cmNew,
         NewStatusKey('~Alt+F3~ Close', kbAltF3, cmClose,
         StdStatusKeys(nil
@@ -278,17 +278,17 @@ BEGIN
    { Create a basic window with static text and radio }
    { buttons. The buttons should be orange and white  }
    R.Assign(5, 1, 35, 16);                            { Assign area }
-   P := New(PWindow, Init(R, 'TEST WINDOW 1', 1));    { Create a window }
+   P := New(PWindow, Init(R, 'ТЕСТ TEST WINDOW 1', 1));    { Create a window }
    If (P <> Nil) Then Begin                           { Window valid }
      R.Assign(5, 5, 20, 6);                           { Assign area }
      P^.Insert(New(PInputLine, Init(R, 30)));
      R.Assign(5, 8, 20, 9);                           { Assign area }
      P^.Insert(New(PRadioButtons, Init(R,
-       NewSItem('Test',
-       NewSITem('Item 2', Nil)))));                   { Red radio button }
+       NewSItem('Тест Test',
+       NewSITem('Пункт Item 2', Nil)))));                   { Red radio button }
      R.Assign(5, 10, 28, 11);                         { Assign area }
      P^.Insert(New(PStaticText, Init(R,
-       'SOME STATIC TEXT')));                         { Insert static text }
+       'ТЕКСТ SOME STATIC TEXT')));                         { Insert static text }
    End;
    Desktop^.Insert(P);                                { Insert into desktop }
    P1:=P;
@@ -307,7 +307,7 @@ end;
 
 PROCEDURE TTVDemo.ShowAboutBox;
 begin
-  MessageBox(#3'Free Vision TUI Framework'#13 +
+  MessageBox(#3'На русском Free Vision TUI Framework'#13 +
     #3'Test/Demo Application'#13+
     #3'(www.freepascal.org)',
     nil, mfInformation or mfOKButton);
@@ -330,7 +330,7 @@ const
   FDOptions: Word = fdOKButton or fdOpenButton;
 begin
   FileName := '*.*';
-  New(FileDialog, Init(FileName, 'Open file', '~F~ile name', FDOptions, 1));
+  New(FileDialog, Init(FileName, 'Открыть Open file', '~F~ile name', FDOptions, 1));
   if ExecuteDialog(FileDialog, @FileName) <> cmCancel then
   begin
     R.Assign(0, 0, 75, 20);
@@ -343,7 +343,7 @@ var
   X: longint;
   S: string;
 begin
-  X := TimedMessageBox ('Everything OK?', nil, mfConfirmation or mfOKCancel, 10);
+  X := TimedMessageBox ('Всё Everything OK?', nil, mfConfirmation or mfOKCancel, 10);
   case X of
    cmCancel: MessageBox ('cmCancel', nil, mfOKButton);
    cmOK: MessageBox ('cmOK', nil, mfOKButton);
@@ -371,12 +371,12 @@ BEGIN
    { Create a basic window with check boxes. The  }
    { check boxes should be orange and white       }
    R.Assign(15, 3, 45, 18);                           { Assign area }
-   P := New(PWindow, Init(R, 'TEST WINDOW 2', 2));    { Create window 2 }
+   P := New(PWindow, Init(R, 'ТЕСТ TEST WINDOW 2', 2));    { Create window 2 }
    If (P <> Nil) Then Begin                           { Window valid }
      R.Assign(5, 5, 20, 7);                           { Assign area }
      P^.Insert(New(PCheckBoxes, Init(R,
-       NewSItem('Test check',
-       NewSITem('Item 2', Nil)))));                   { Create check box }
+       NewSItem('Тест Test check',
+       NewSITem('Пункт Item 2', Nil)))));                   { Create check box }
    End;
    Desktop^.Insert(P);                                { Insert into desktop }
    P2:=P;
@@ -389,12 +389,12 @@ BEGIN
    { Create a basic dialog box. In it are buttons,  }
    { list boxes, scrollbars, inputlines, checkboxes }
    R.Assign(32, 2, 77, 18);                           { Assign screen area }
-   P := New(PDialog, Init(R, 'TEST DIALOG'));         { Create dialog }
+   P := New(PDialog, Init(R, 'ТЕСТ TEST DIALOG'));         { Create dialog }
    If (P <> Nil) Then Begin                           { Dialog valid }
      R.Assign(5, 5, 20, 7);                          { Allocate area }
      P^.Insert(New(PCheckBoxes, Init(R,
-       NewSItem('Test',
-       NewSITem('Item 2', Nil)))));                   { Insert check box }
+       NewSItem('Тест Test',
+       NewSITem('Пункт Item 2', Nil)))));                   { Insert check box }
      R.Assign(5, 2, 20, 3);                           { Assign area }
      B := New(PScrollBar, Init(R));                   { Insert scroll bar }
      If (B <> Nil) Then Begin                         { Scrollbar valid }
@@ -413,7 +413,7 @@ BEGIN
      Lb := New(PListBox, Init(R, 1, B));              { Create listbox }
      P^.Insert(Lb);                                   { Insert listbox }
      List := New(PStrCollection, Init(10, 5));        { Create string list }
-     List^.AtInsert(0, NewStr('Zebra'));              { Insert text }
+     List^.AtInsert(0, NewStr('Пони Zebra'));              { Insert text }
      List^.AtInsert(1, NewStr('Apple'));              { Insert text }
      List^.AtInsert(2, NewStr('Third'));              { Insert text }
      List^.AtInsert(3, NewStr('Peach'));              { Insert text }
@@ -425,7 +425,7 @@ BEGIN
      List^.AtInsert(9, NewStr('Last item'));          { Insert text }
      Lb^.Newlist(List);                               { Give list to listbox }
      R.Assign(30, 2, 40, 4);                          { Assign area }
-     P^.Insert(New(PButton, Init(R, '~O~k', 100, bfGrabFocus)));{ Create okay button }
+     P^.Insert(New(PButton, Init(R, 'Ок ~O~k', 100, bfGrabFocus)));{ Create okay button }
      R.Assign(30, 15, 40, 17);                        { Assign area }
      Desktop^.Insert(P);                              { Insert dialog }
      P3:=P;
