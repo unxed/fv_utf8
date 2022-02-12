@@ -1,7 +1,13 @@
 # fv_utf8
 [Free Vision](https://wiki.freepascal.org/Free_Vision) UTF-8 adoption
 
-An attempt to adopt Free Vision TUI library from [Free Pascal](https://www.freepascal.org/) from using 1-byte character encodings to UTF-8 on Linux.
+---
+
+Free Vision has already been ported to Unicode in Free Pascal. So it's probably better to use [official implementation](https://github.com/fpc/FPCSource/tree/main/packages/fv/src) (see units with names starting with "u").
+
+---
+
+Here is an attempt to adopt Free Vision TUI library from [Free Pascal](https://www.freepascal.org/) from using 1-byte character encodings to UTF-8 on Linux.
 
 Current state: test app builds, runs and is able to show its interface properly. All controls of test app are working (text editor needs some improvements though, but is already able to properly display utf-8 encoded text opened from file).
 
