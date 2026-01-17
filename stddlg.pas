@@ -915,13 +915,9 @@ var
   N1,N2 : NameStr;
   E1,E2 : Extstr;
 begin
-{$ifdef Unix}
-  FSplit(What,D1,N1,E1);
-  FSplit(Mask,D2,N2,E2);
-{$else}
+{ Always use case-insensitive matching for file masks }
   FSplit(Upper(What),D1,N1,E1);
   FSplit(Upper(Mask),D2,N2,E2);
-{$endif}
   MatchesMask:=CmpStr(N2,N1) and CmpStr(E2,E1);
 end;
 
@@ -1050,15 +1046,11 @@ begin
   AWildCard := FExpand(AWildCard);
   FSplit(AWildCard, Dir, Name, Ext);
   if pos(ListSeparator,AWildCard)>0 then
-   begin
-     WildName:=Copy(AWildCard,length(Dir)+1,255);
-     FindStr:=Dir+AllFiles;
-   end
+     WildName:=Copy(AWildCard,length(Dir)+1,255)
   else
-   begin
      WildName:=Name+Ext;
-     FindStr:=AWildCard;
-   end;
+  { Always use AllFiles for FindFirst to support case-insensitive matching }
+  FindStr:=Dir+AllFiles;
   FindFirst(FindStr, FindAttr, S);
   P := PSearchRec(@P);
   while assigned(P) and (DosError = 0) do
