@@ -2816,9 +2816,10 @@ end;
 
 procedure TFrame.Draw;
 const
-  LargeC:array[boolean] of char=('^',#24);
-  RestoreC:array[boolean] of char=('|',#18);
-  ClickC:array[boolean] of char=('*',#15);
+  { UTF-8 characters for zoom button }
+  LargeC = '↕';      { Up-down arrow for zoom/maximize }
+  RestoreC = '↕';    { Same for restore }
+  ClickC = '◆';      { Diamond for clicked state }
 var
   CFrame, CTitle: Word;
   F, I, L, Width: Sw_Integer;
@@ -2887,16 +2888,16 @@ begin
       if FrameMode and fmCloseClicked = 0 then
         MoveCStr(B[2], '[~■~]', CFrame)
       else
-        MoveCStr(B[2], '[~'+ClickC[LowAscii]+'~]', CFrame);
+        MoveCStr(B[2], '[~'+ClickC+'~]', CFrame);
     if PWindow(Owner)^.Flags and wfZoom <> 0 then
     begin
-      MoveCStr(B[Width - 5], '[~'+LargeC[LowAscii]+'~]', CFrame);
       Owner^.SizeLimits(Min, Max);
       if FrameMode and fmZoomClicked <> 0 then
-        Int64Rec(B[Width - 4]).Lo := ord(ClickC[LowAscii])
+        MoveCStr(B[Width - 5], '[~'+ClickC+'~]', CFrame)
+      else if (Owner^.Size.X=Max.X) and (Owner^.Size.Y=Max.Y) then
+        MoveCStr(B[Width - 5], '[~'+RestoreC+'~]', CFrame)
       else
-        if (Owner^.Size.X=Max.X) and (Owner^.Size.Y=Max.Y) then
-          Int64Rec(B[Width - 4]).Lo := ord(RestoreC[LowAscii]);
+        MoveCStr(B[Width - 5], '[~'+LargeC+'~]', CFrame);
     end;
   end;
   WriteLine(0, 0, Size.X, 1, B);
