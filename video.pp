@@ -1382,5 +1382,8 @@ Const
   );
 
 initialization
+  ErrorCode := ErrOK;
+  ErrorInfo := nil;
+  ErrorHandler := @DefaultErrorHandler;
   SetVideoDriver(SysVideoDriver);
 end.

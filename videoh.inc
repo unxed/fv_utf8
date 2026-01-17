@@ -166,7 +166,9 @@ function DefaultErrorHandler(AErrorCode: Longint; AErrorInfo: Pointer): TErrorHa
 
 const
   errOk              = 0;
-  ErrorCode: Longint = ErrOK;
-  ErrorInfo: Pointer = nil;
-  ErrorHandler: TErrorHandler = @DefaultErrorHandler;
+
+var
+  ErrorCode: Longint;
+  ErrorInfo: Pointer;
+  ErrorHandler: TErrorHandler;
 
