@@ -1181,7 +1181,7 @@ procedure TIndicator.Draw;
 VAR
   Color : Byte;
   Frame : String;
-  L     : array[0..1] of Longint;
+  L     : array[0..1] of PtrInt;
   S     : String[15];
   B     : TDrawBuffer;
 begin
